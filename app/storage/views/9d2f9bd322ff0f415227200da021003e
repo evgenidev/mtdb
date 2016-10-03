@@ -1,0 +1,3 @@
+<?php if (Helpers::hasLinks($title)): ?>
+    <div class="status"><?php echo trans('stream::main.availToStream'); ?></div>
+<?php endif; ?>

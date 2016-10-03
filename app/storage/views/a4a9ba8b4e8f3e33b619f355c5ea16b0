@@ -1,0 +1,203 @@
+
+<?php $__env->startSection('bodytag'); ?>
+	<body id="dashboard" class="actions">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+	<section id="dash-container" class="with-filter-bar">
+
+		<?php echo $__env->make('Dashboard.Partials.Sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+		<div class="content clearfix">
+
+			<section class="row">
+         		<?php echo $__env->make('Partials.Response', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        	</section>
+
+			<section class="dash-padding">
+
+				<div class="col-sm-12">
+					<?php echo $__env->make('Dashboard.Partials.StatsBar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+				</div>
+
+		 		<div class="scraper-container col-sm-4 <?php echo $options->getDataProvider() !== 'imdb' ? 'disabled' : ''; ?>">
+			 		<div class="scraper-contents">
+			 			<h4><i class="fa fa-wrench"></i> <?php echo trans('dash.scrape imdb'); ?></h4>
+				 		<?php echo Form::open(array('url' => 'dashboard/imdb-advanced')); ?>
+
+					    <div class="form-group">
+					      <?php echo Form::label('from', trans('dash.from')); ?>
+					      <?php echo Form::text('from', 1980, array('class' => 'form-control')); ?>
+					      <?php echo $errors->first('from', '<span class="help-block alert alert-danger">:message</span>'); ?>          
+					    </div>           
+
+					    <div class="form-group">
+					      <?php echo Form::label('to', trans('dash.to')); ?>
+					      <?php echo Form::text('to', 2015, array('class' => 'form-control')); ?>
+					      <?php echo $errors->first('to', '<span class="help-block alert alert-danger">:message</span>'); ?>
+					    </div>
+
+					    <div class="form-group">
+					      <?php echo Form::label('minVotes', trans('dash.min votes')); ?>
+					      <?php echo Form::text('minVotes', 2000, array('class' => 'form-control')); ?>
+					      <?php echo $errors->first('minVotes', '<span class="help-block alert alert-danger">:message</span>'); ?>          
+					    </div>
+
+					    <div class="form-group">
+					      <?php echo Form::label('minRating', trans('dash.min rating')); ?>
+					      <?php echo Form::text('minRating', 4, array('class' => 'form-control')); ?>
+					      <?php echo $errors->first('minRating', '<span class="help-block alert alert-danger">:message</span>'); ?>         
+					    </div>
+
+					    <div class="form-group">
+					      <?php echo Form::label('howMuch', trans('dash.how much')); ?>
+					      <?php echo Form::text('howMuch', 1000, array('class' => 'form-control')); ?>  
+					      <?php echo $errors->first('howMuch', '<span class="help-block alert alert-danger">:message</span>'); ?>            
+					    </div>
+
+					    <div class="form-group">
+					      <?php echo Form::label('offset', trans('dash.offset')); ?>
+					      <?php echo Form::text('offset', Input::old('offset'), array('class' => 'form-control', 'placeholder' => '1000...')); ?>   
+					      <?php echo $errors->first('offset', '<span class="help-block alert alert-danger">:message</span>'); ?>            
+					    </div>
+
+					    <button type="submit" class="btn btn-primary"><?php echo trans('dash.scrape'); ?></button>
+
+					    <?php echo Form::close(); ?>
+			 		</div>
+		 		</div>
+
+			 	<div class="scraper-container col-sm-4 <?php echo $options->getDataProvider() !== 'tmdb' ? 'disabled' : ''; ?>">
+			 		<div class="scraper-contents">
+			 			<h4><i class="fa fa-wrench"></i> <?php echo trans('dash.scrape tmdb'); ?></h4>
+				 		<?php echo Form::open(array('url' => 'dashboard/tmdb-discover')); ?>
+
+						    <div class="form-group">
+						      <?php echo Form::label('sort_by', trans('dash.sort by')); ?>
+						      <?php echo Form::select('sort_by', array('popularity.desc' => trans('dash.popularity'), 'vote_average.desc' => trans('dash.votes'), 'release_date.desc' => trans('dash.year')), 'popularity.desc', array('class' => 'form-control')); ?>
+						      <?php echo $errors->first('sort_by', '<span class="help-block alert alert-danger">:message</span>'); ?>          
+						    </div>
+
+						    <div class="form-group">
+						      <?php echo Form::label('include_adult', trans('dash.include adult')); ?>
+						      <?php echo Form::select('include_adult', array('true' => trans('dash.yes'), 'false' => trans('dash.no')), 'false', array('class' => 'form-control')); ?>
+						      <?php echo $errors->first('include_adult', '<span class="help-block alert alert-danger">:message</span>'); ?>          
+						    </div>
+
+						    <div class="form-group">
+						      <?php echo Form::label('type', trans('main.type')); ?>
+						      <?php echo Form::select('type', array('movie' => trans('main.movie'), 'tv' => trans('main.series')), 'movie', array('class' => 'form-control')); ?>
+						      <?php echo $errors->first('type', '<span class="help-block alert alert-danger">:message</span>'); ?>          
+						    </div>
+
+						    <div class="form-group">
+						      <?php echo Form::label('language', trans('dash.language')); ?>
+						      <?php echo Form::text('language', '', array('class' => 'form-control')); ?>
+						      <span class="help-block"> * <?php echo trans('dash.tmdb lang expl'); ?>.</span>
+						      <?php echo $errors->first('language', '<span class="help-block alert alert-danger">:message</span>'); ?>
+						    </div>
+
+						    <div class="form-group">
+						      <?php echo Form::label('release_date*ite', trans('dash.from')); ?>
+						      <?php echo Form::text('release_date*ite', '1980-01-01', array('class' => 'form-control')); ?>
+						      <?php echo $errors->first('release_date*ite', '<span class="help-block alert alert-danger">:message</span>'); ?>
+						    </div>
+						     
+						    <div class="form-group">
+						      <?php echo Form::label('release_date*lte', trans('dash.to')); ?>
+						      <?php echo Form::text('release_date*lte', '2015-01-01', array('class' => 'form-control')); ?>
+						      <?php echo $errors->first('release_date*lte', '<span class="help-block alert alert-danger">:message</span>'); ?>
+						    </div>
+
+						    <div class="form-group">
+						      <?php echo Form::label('howMuch', trans('dash.how much')); ?>
+						      <?php echo Form::text('howMuch', 100, array('class' => 'form-control')); ?>
+						      <?php echo $errors->first('howMuch', '<span class="help-block alert alert-danger">:message</span>'); ?>
+						    </div>
+
+						    <div class="form-group">
+						      <?php echo Form::label('page', trans('dash.offset')); ?>
+						      <?php echo Form::text('page', 1, array('class' => 'form-control')); ?>
+						      <?php echo $errors->first('page', '<span class="help-block alert alert-danger">:message</span>'); ?>
+						    </div>
+
+						    <button type="submit" class="btn btn-primary"><?php echo trans('dash.scrape'); ?></button>
+
+						<?php echo Form::close(); ?>
+			 		</div>
+			 	</div>
+
+			 	<div class="scraper-container col-sm-4 <?php echo $options->getDataProvider() === 'db' ? 'disabled' : ''; ?>">
+					<div class="scraper-contents">
+						<h4><?php echo trans('dash.fully scrape'); ?></h4>
+						<?php echo Form::label('amount', trans('dash.how much')); ?>
+				        <?php echo Form::open(array('route' => 'titles.scrapeFully')); ?>
+				        <?php echo Form::text('amount', 100, array('class' => 'form-control')); ?><br>
+				        <button type="submit" class="btn btn-primary"><?php echo trans('dash.scrape'); ?></button>
+				        <?php echo Form::close(); ?>
+					</div>
+			 	</div>
+
+			 	<div class="scraper-container col-sm-4">
+					<div class="scraper-contents delete-container">
+						<?php echo Form::open(array('url' => 'dashboard/make-site-map')); ?>
+			         		<button type="submit" class="btn btn-primary"><i class="fa fa-sitemap"></i> Generate Sitemap</button>      
+			        	<?php echo Form::close(); ?>
+						<h4><?php echo trans('dash.delete data'); ?></h4>
+						<?php echo Form::open(array('url' => 'dashboard/truncate-by-year')); ?>
+							<?php echo Form::label('from', trans('dash.from')); ?>
+				      		<?php echo Form::text('from', 1988, array('class' => 'form-control')); ?>
+
+				      		<div class="form-group">
+				      			<?php echo Form::label('to', trans('dash.to')); ?>
+				      			<?php echo Form::text('to', 1998, array('class' => 'form-control')); ?>
+				      		</div>
+
+			         		<button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> <?php echo trans('dash.delete by year'); ?></button>      
+			        	<?php echo Form::close(); ?>
+
+						<?php echo Form::open(array('url' => 'dashboard/truncate-no-posters')); ?>
+							<?php echo Form::hidden('table', 'titles'); ?>
+			         		<button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> <?php echo trans('dash.delete titles no posters'); ?></button>      
+			        	<?php echo Form::close(); ?>
+			        	<?php echo Form::open(array('url' => 'dashboard/truncate-no-posters')); ?>
+							<?php echo Form::hidden('table', 'actors'); ?>
+			         		<button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> <?php echo trans('dash.delete actors no images'); ?></button>      
+			        	<?php echo Form::close(); ?>
+			        	
+				        <?php echo Form::open(array('url' => 'dashboard/truncate')); ?>
+			         		<button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> <?php echo trans('dash.truncate all data'); ?></button>      
+			        	<?php echo Form::close(); ?>
+					</div>
+			 	</div>
+
+			 	<div class="scraper-container col-sm-4">
+					<div class="scraper-contents">
+				        <p>This will clear all the application cache. You might need to do it if you add/remove some item from the site and the change doesn't reflect automatically.</p>
+
+				        <?php echo Form::open(array('url' => 'dashboard/clear-cache')); ?>
+				        	<button type="submit" class="btn btn-primary"><?php echo trans('dash.clearCache'); ?></button>
+				        <?php echo Form::close(); ?>
+					</div>
+			 	</div>
+			</section>
+
+		</div>
+
+	</section>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('ads'); ?>	
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+	<script>
+
+
+	app.paginator.start(app.viewModels.titles, '.content', 15);
+
+	</script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

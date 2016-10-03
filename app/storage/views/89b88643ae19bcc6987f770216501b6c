@@ -1,0 +1,70 @@
+
+<?php $__env->startSection('title'); ?>
+    <title><?php echo trans('main.overview of'); ?> '<?php echo e($title->title); ?>' <?php echo trans_choice('main.season', 1); ?> <?php echo e($num); ?> - <?php echo $options->getSiteName(); ?></title>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('bodytag'); ?>
+  <body id="title-page">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+    <div class="container episode-list" id="content">
+
+        <?php echo $__env->make('Titles.Partials.DetailsPanel', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+        <div class="heading"><?php echo trans_choice('main.season', 1).' '.$num.' '.trans('main.episodeList'); ?></div>
+
+        <ul class="list-unstyled" id="episode-list" data-bind="moreLess, playVideos">
+            <?php foreach($episodes as $episode): ?>
+                <li class="media">
+                    <?php if ($episode->promo): ?>
+                        <a class="col-sm-3 play" href="<?php echo Helpers::episodeUrl($title->title, $title->id, $title->type, $num, $episode->episode_number); ?>" data-source="<?php echo $episode->promo; ?>" data-poster="<?php echo str_replace('w300', 'original', Helpers::getEpisodeImage($title, $episode)); ?>">
+                            <img class="media-object img-responsive" src="<?php echo Helpers::getEpisodeImage($title, $episode); ?>" alt="<?php echo $episode->title; ?>">
+                            <div class="center"><img class="img-responsive" src="<?php echo asset('assets/images/play.png'); ?>"> </div>
+                            <?php if (Hooks::hasReplace('Titles.Seasons.ForEachMovie')): ?>
+                                <?php echo Hooks::renderReplace('Titles.Seasons.ForEachMovie', $episode, 'episode'); ?>
+                            <?php endif; ?>
+                        </a>
+                    <?php else: ?>
+                        <a class="col-sm-3" href="<?php echo Helpers::episodeUrl($title->title, $title->id, $title->type, $num, $episode->episode_number); ?>">
+                            <img class="media-object img-responsive" src="<?php echo Helpers::getEpisodeImage($title, $episode); ?>" alt="<?php echo $episode->title; ?>">
+                            <?php if (Hooks::hasReplace('Titles.Seasons.ForEachMovie')): ?>
+                                <?php echo Hooks::renderReplace('Titles.Seasons.ForEachMovie', $episode, 'episode'); ?>
+                            <?php endif; ?>
+                        </a>
+                    <?php endif; ?>
+                    <div class="media-body">
+                        <h4 class="media-heading"><a href="<?php echo Helpers::episodeUrl($title->title, $title->id, $title->type, $num, $episode->episode_number); ?>"><?php echo trans('main.episode').' '.$episode->episode_number.' - '.$episode->title; ?></a></h4>
+                        <strong><?php echo trans('main.release date').': '.$episode->release_date; ?></strong>
+                        <p><?php echo $episode->plot; ?></p>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <!-- video modal -->
+    <div class="modal fade" id="vid-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <button type="button" class="modal-close" data-dismiss="modal" aria-hidden="true"> 
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                    </span>
+                </button>
+                <div class="modal-body"> </div>
+            </div>
+         </div>
+    </div>
+    <!-- /video modal -->
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+    <script>
+        ko.applyBindings(app.viewModels.titles.show, $('#content')[0]);
+    </script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

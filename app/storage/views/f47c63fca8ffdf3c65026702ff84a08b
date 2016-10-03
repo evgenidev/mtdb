@@ -1,0 +1,14 @@
+ <ul class="list-unstyled list-inline col-sm-6" id="legal">
+    <?php foreach ($footerMenu['items'] as $item): ?>
+        <?php if (isset($item['action'])): ?>
+            <?php if ($item['type'] === 'link'): ?>
+                <li><a href="<?php echo $item['action']; ?>"><?php echo $item['label']; ?></a></li> |
+            <?php elseif ($item['type'] === 'route'): ?>
+                <li><a href="<?php echo route($item['action']); ?>"><?php echo $item['label']; ?></a></li> |
+            <?php elseif ($item['type'] === 'page'): ?>
+                <li><a href="<?php echo url($item['action']); ?>"><?php echo $item['label']; ?></a></li> |
+            <?php endif; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <li><a href="<?php echo route('contact'); ?>"><?php echo trans('main.contact'); ?></a></li>
+</ul>

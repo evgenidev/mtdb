@@ -1,0 +1,125 @@
+
+<?php $__env->startSection('title'); ?>
+    <title> <?php echo $title->title.' '.trans_choice('main.season', 1).' '.$season->number.', '.trans('main.episode').' '.$episode->episode_number. ' - ' .$options->getSiteName(); ?></title>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('bodytag'); ?>
+  <body id="title-page" class="episode-page original-theme">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+    <div class="container" id="content">
+        <div class="row">
+            <div class="col-sm-9">
+                <div class="clearfix">
+                    <?php if ($hasReplace = Hooks::hasReplace('Titles.Show.LinksPanel')): ?>
+                        <div data-bind="moreLess" class="streaming-details">
+                            <?php echo $__env->make('Titles.Episodes.Partials.DetailsPanel', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                        </div>
+
+                        <div class="row">
+                            <?php echo Hooks::renderReplace('Titles.Show.LinksPanel', $links, 'links'); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if( ! $hasReplace || ! Helpers::hasLinks(isset($links) ? $links : [])): ?>
+                        <div class="row">
+                            <?php if ($episode->promo): ?>
+                                <div id="trailer-mask" data-bind="click: showTrailer" data-src="<?php echo $episode->promo; ?>">
+                                    <img class="img-responsive img-thumbnail" src="<?php echo Helpers::original(Helpers::getEpisodeImage($title, $episode)); ?>">
+                                    <div class="center"><img class="img-responsive" src="<?php echo asset('assets/images/play.png'); ?>"> </div>
+                                </div>
+                                <video id="trailer" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="100%" height="500px"> </video>
+                            <?php else: ?>
+                                <div id="trailer-mask">
+                                    <img class="img-responsive img-thumbnail" src="<?php echo Helpers::original(Helpers::getEpisodeImage($title, $episode)); ?>">
+                                </div>
+                            <?php endif; ?>
+                            <?php if ($hasReplace && ! Helpers::hasLinks(isset($links) ? $links : [])): ?>
+                                <button class="btn btn-primary" style="position: absolute; top: 0" data-toggle="modal" data-target="#add-link-modal"><i class="fa fa-plus"></i> <?php echo trans('stream::main.addLink'); ?></button>
+                            <?php endif; ?>
+                        </div>
+                     <?php endif; ?>    
+                </div>
+
+                <?php if ($ad = $options->getTitleJumboAd()): ?>
+                    <div id="ad"><?php echo $ad; ?></div>
+                <?php endif; ?>
+
+                <?php if( ! $hasReplace): ?>
+                    <?php echo $__env->make('Titles.Episodes.Partials.DetailsPanel', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <?php endif; ?>
+            </div>
+            <div class="col-sm-3" id="images-col">
+                <?php if($title->image->count()): ?>
+                    <?php foreach($title->image->slice(0, 4) as $img): ?>
+                        <img src="<?php echo $img->path; ?>" alt="<?php echo $img->title; ?>" class="img-responsive img-thumbnail">
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="row" id="episode-grid">
+            <h2><?php echo trans('main.otherEpsForSeason'); ?></h2>
+            <?php foreach($season->episode as $ep): ?>
+                <?php if ($ep->episode_number == $episode->episode_number): ?>
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <figure>
+                            <img src="<?php echo Helpers::getEpisodeImage($title, $ep); ?>" alt="<?php echo $ep->title; ?>" class="img-responsive">
+                            <figcaption>
+                                <span><?php echo trans('main.episode').' '.$ep->episode_number.' - '. $ep->title; ?></span>
+                            </figcaption>
+                        </figure>
+                    </div>
+                <?php else: ?>
+                    <a href="<?php echo Helpers::episodeUrl($title->title, $title->id, $title->type, $season->number, $ep->episode_number); ?>" class="col-sm-6 col-md-4 col-lg-3">
+                        <figure>
+                            <img src="<?php echo Helpers::getEpisodeImage($title, $ep); ?>" alt="<?php echo $ep->title; ?>" class="img-responsive">
+                            <figcaption>
+                                <span><?php echo trans('main.episode').' '.$ep->episode_number.' - '. str_limit($ep->title, 25); ?></span>
+                            </figcaption>
+                        </figure>
+                    </a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="row">
+            <div id="disqus_thread"></div>
+        </div>
+    </div>
+
+    <?php echo Hooks::renderHtml('Titles.Show.BeforeScripts'); ?>
+
+    <div class="modal" id="video-modal" data-src="<?php echo $title->trailer; ?>">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <button type="button" class="modal-close" data-dismiss="modal" aria-hidden="true">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                    </span>
+                </button>
+                <div id="video-container"></div>
+            </div>
+        </div>
+    </div>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+
+    <script>
+        vars.title = <?php echo $title->toJson(); ?>;
+        vars.disqus = '<?php echo $options->getDisqusShortname(); ?>';    
+        vars.titleId = '<?php echo $title->id; ?>';
+        vars.trailersPlayer = '<?php echo $options->trailersPlayer(); ?>';
+        vars.userId = '<?php echo Sentry::getUser() ? Sentry::getUser()->id : false ?>';
+        ko.applyBindings(app.viewModels.titles.show, $('#content')[0]);
+        app.viewModels.titles.create.activeSeason('<?php echo $season->number ?>');
+        app.viewModels.titles.create.activeEpisode('<?php echo $episode->episode_number ?>');
+        app.viewModels.titles.show.start(<?php echo Helpers::hasLinks(isset($links) ? $links : []) ? $links->first()->toJson() : null; ?>);
+    </script>
+
+    <?php echo Hooks::renderHtml('Titles.Show.AfterScripts'); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

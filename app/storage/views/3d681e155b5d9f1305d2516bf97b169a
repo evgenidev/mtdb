@@ -1,0 +1,35 @@
+
+<?php $__env->startSection('bodytag'); ?>
+	<body id="dashboard" class="media-page">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+	<section id="dash-container" class="with-filter-bar">
+
+	<?php echo $__env->make('Dashboard.Partials.Sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+	<section class="content">
+
+        <?php echo $__env->make('Partials.MediaUploadPage', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+	</section>
+	</section>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('ads'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+
+<?php echo HTML::script('assets/js/vendor/uploader.min.js'); ?>
+
+<script>  
+    app.viewModels.media.start();
+	app.paginator.start(app.viewModels.media, $('#dash-container')[0], 24);
+</script>
+
+<?php $__env->stopSection(); ?>
+
+
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -1,0 +1,1 @@
+<li><a href="#links" data-toggle="tab"><?php echo trans('stream::main.links'); ?></a></li>

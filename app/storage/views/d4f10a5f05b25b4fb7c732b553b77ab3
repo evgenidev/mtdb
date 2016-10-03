@@ -1,0 +1,110 @@
+<div class="clearfix" id="details-container">
+    <div class="col-md-2 visible-lg">
+        <img class="img-responsive" src="<?php echo $title->poster; ?>">
+        <?php if (Hooks::hasReplace('Titles.Show.LinksPanel') && $title->type == 'movie'): ?>
+            <button id="play-trailer" class="btn btn-primary" data-bind="click: playVideo.bind($data, '<?php echo $title->trailer; ?>', false)"><i class="fa fa-play"></i> Play Trailer</button>
+        <?php endif; ?>
+    </div>
+    <div class="col-lg-10 clearfix" id="details">
+        <div class="col-md-8">
+            <h3><a href="<?php echo Helpers::url($title->title, $title->id, $title->type); ?>"><?php echo $title->title .' '. "({$title->year})"; ?></a></h3>
+
+            <ul class="list-unstyled list-inline">
+                <?php foreach(explode('|', $title->genre) as $genre): ?>
+                    <li><a href="<?php echo route(($title->type == 'series' ? $title->type : $title->type.'s').'.index').'?genre='.trim($genre); ?>"><?php echo $genre; ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+
+            <p><?php echo $title->plot; ?></p>
+            
+            <div id="people">
+                <?php if ( ! $title->director->isEmpty()): ?>
+                    <strong><?php echo trans('main.directors'); ?>:</strong>
+                    <ul class="list-unstyled list-inline">
+                        <?php foreach($title->director as $director): ?>
+                            <li><?php echo $director->name; ?></li>
+                        <?php endforeach; ?>
+                    </ul><br>
+                <?php endif; ?>
+
+                <?php if ( ! $title->writer->isEmpty()): ?>
+                    <strong><?php echo trans('main.writing'); ?>:</strong>
+                    <ul class="list-unstyled list-inline">
+                        <?php foreach($title->writer->slice(0, 3) as $writer): ?>
+                            <li><?php echo $writer->name; ?></li>
+                        <?php endforeach; ?>
+                    </ul><br>
+                <?php endif; ?>
+
+                <?php if ( ! $title->actor->isEmpty()): ?>
+                    <strong><?php echo trans('main.stars'); ?>:</strong>
+                    <ul class="list-unstyled list-inline">
+                        <?php foreach($title->actor->slice(0, 3) as $actor): ?>
+                            <li><a href="<?php echo Helpers::url($actor->name, $actor->id, 'people'); ?>"><?php echo $actor->name; ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="col-md-4" id="sub-details">
+        
+            <?php if ($title->release_date): ?>
+                <strong><?php echo trans('main.release date') .': '; ?></strong><span><?php echo $title->release_date; ?></span><br>
+            <?php endif; ?>
+
+            <?php if ( ! $title->season->isEmpty()): ?>
+                <strong><?php echo trans('main.seasons'); ?>: </strong>
+                <?php foreach($title->season as $season): ?>
+                    <a href="<?php echo Helpers::season($title->title, $season); ?>"><?php echo $season->number; ?></a>
+                <?php endforeach; ?>
+                <br>
+            <?php endif; ?>
+            <div id="ratings">
+                <?php if ($title->mc_user_score): ?>
+                    <img src="<?php echo asset('assets/images/metacritic.png'); ?>" class="rating-icon" alt="metacritic icon" title="metacritic.com"/>
+                    <span class="hidden-md" data-bind="raty: <?php echo $title->mc_user_score; ?>, stars: 5, readOnly: true"></span>
+                    <span class="raty-text"><?php echo $title->mc_user_score; ?>/10</span>
+                    <br>
+                <?php endif; ?>
+                
+                <?php if ($title->tmdb_rating): ?>
+                        <img src="<?php echo asset('assets/images/tmdb.png'); ?>" class="rating-icon" alt="themoviedb icon" title="themoviedb.org"/>
+                    <span class="hidden-md" data-bind="raty: <?php echo $title->tmdb_rating; ?>, stars: 5, readOnly: true"></span>
+                    <span class="raty-text"><?php echo $title->tmdb_rating; ?>/10</span>
+                    <br>
+                <?php endif; ?>
+                
+                <?php if ($title->imdb_rating): ?>
+                        <img src="<?php echo asset('assets/images/imdb.png'); ?>" class="rating-icon" alt="IMDb icon" title="imdb.org"/>
+                    <span class="hidden-md" data-bind="raty: <?php echo $title->imdb_rating; ?>, stars: 5, readOnly: true"></span>
+                    <span class="raty-text"><?php echo $title->imdb_rating; ?>/10</span>
+                <?php endif; ?>
+            </div>
+
+
+            <ul class="list-unstyled">
+                <?php if ($title->country): ?>
+                    <li><strong><?php echo trans('main.country') .': '; ?></strong><span><?php echo $title->country; ?></span></li>
+                <?php endif; ?>
+
+                <?php if ($title->language): ?>
+                    <li><strong><?php echo trans('dash.language') .': '; ?></strong><span><?php echo $title->language; ?></span></li>
+                <?php endif; ?>
+
+                <?php if ($title->runtime): ?>
+                    <li><strong><?php echo trans('main.runtime') .': '; ?></strong><span><?php echo $title->runtime; ?></span></li>
+                <?php endif; ?>
+
+                <?php if ($title->budget): ?>
+                   <li><strong><?php echo trans('main.budget') .': '; ?></strong><span><?php echo $title->budget; ?></span></li>
+                <?php endif; ?>
+
+                <?php if ($title->revenue): ?>
+                    <li><strong><?php echo trans('main.revenue') .': '; ?></strong><span><?php echo $title->revenue; ?></span></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+
+    </div>
+</div>

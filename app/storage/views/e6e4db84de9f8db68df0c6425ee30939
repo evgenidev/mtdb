@@ -1,0 +1,150 @@
+
+<?php $__env->startSection('title'); ?>
+  <title><?php echo e($actor['name'] . '-' . $options->getSiteName()); ?> </title>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('meta'); ?>
+<meta name="title" content="<?php echo e($actor['name'] . ' - ' . $options->getSiteName()); ?>">
+  <meta name="description" content="<?php echo e($actor['bio']); ?>">
+  <meta name="keywords" content="<?php echo $options->getActorPageKeywords(); ?>">
+  <meta property="og:title" content="<?php echo e($actor['name'] . ' - ' . $options->getSiteName()); ?>"/>
+  <meta property="og:url" content="<?php echo Request::url(); ?>"/>
+  <meta property="og:site_name" content="<?php echo $options->getSiteName(); ?>"/>
+  <meta property="og:image" content="<?php echo str_replace('w342', 'original', asset($actor['image'])); ?>"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="{{ $options->getSiteName() }}">
+  <meta name="twitter:title" content="<?php echo e($actor['name'] . ' - ' . $options->getSiteName()); ?>">
+  <meta name="twitter:description" content="<?php echo e($actor['bio']); ?>">
+  <meta name="twitter:image" content="<?php echo str_replace('w342', 'original', asset($actor['image'])); ?>">
+  <link rel="canonical" href="<?php echo url(Str::slug(trans('main.people')).'/'.$actor->id.'-'.Str::slug($actor->name)); ?>">
+
+  <?php if ( ! $actor['bio'] || ! $actor['fully_scraped']): ?>
+  	<meta name="robots" content="noindex">
+  <?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('assets'); ?>
+  @parent
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('bodytag'); ?>
+  <body id="actor-page">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+	<div class="container">
+
+		<div class="row">
+
+			<section class="col-sm-3" id="main-image">
+				<img src="<?php echo e(asset($actor['image'])); ?>" alt="<?php echo 'Image of ' . $actor['name']; ?>" class="img-responsive thumb">
+			</section>
+
+			<section class="col-sm-9" id="bio">
+				<h1><?php echo e($actor['name']); ?></h1>
+
+			  	<?php if ($actor['bio']): ?>
+			    
+			    	<p class="actor-bio"><?php echo e($actor['bio']); ?></p>
+
+			      	<br>
+			    <?php else: ?>
+
+			    	<?php echo e(trans('main.no bio') . ' ' . $actor['name']); ?>.
+
+			    <?php endif; ?>
+
+			    <a target="_blank" href="<?php echo e($actor['full_bio_link']); ?>"><i class="fa fa-book"></i> <?php echo trans('main.read bio at') . ' ' . $provider; ?></a> | 
+			    <a target="_blank" href="<?php echo Helpers::wikiUrl($actor['name']); ?>"><?php echo trans('main.read bio at'); ?> Wikipedia</a>
+			    
+				<hr>
+
+			  <dl class="dl-horizontal">			  
+			    <dt><?php echo trans('main.born'); ?>: </dt>
+			    <dd>
+			      <?php if ($actor['birth_date']): ?>
+				    <?php echo Carbon\Carbon::parse($actor['birth_date'])->toFormattedDateString(); ?>
+				  <?php endif; ?>
+
+				  <?php if ($actor['birth_place']): ?>
+				    <?php echo trans('main.in'); ?> <?php echo e($actor['birth_place']); ?>
+				  <?php endif; ?>
+			    </dd>
+			    
+			    <?php if ( ! $actor->title->isEmpty()): ?>
+			    	<dt><?php echo trans('main.movie/tv credits'); ?>: </dt>
+			    	<dd><?php echo count($actor['title']); ?></dd>
+				    <dt><?php echo trans('main.first appeared'); ?>: </dt>
+				    <dd><?php echo trans('main.in the'); ?> <?php echo e($actor->title->last()->type); ?> <a href="<?php echo Helpers::url($actor->title->last()->title, $actor->title->last()->id, $actor->title->last()->type); ?>"><?php echo e($actor->title->last()->title); ?></a> <?php echo e($actor->title->last()->release_date); ?></dd>
+				    <dt><?php echo trans('main.latest project'); ?>: </dt>
+				    <dd><?php echo e(trans('main.'.$actor->title->first()->type)); ?> <a href="<?php echo Helpers::url($actor->title->first()->title, $actor->title->first()->id, $actor->title->first()->type); ?>"><?php echo e($actor->title->first()->title); ?> </a> <?php echo e($actor->title->first()->release_date); ?></dd>
+				  </dl>
+				<?php endif; ?>
+
+			    <?php if ($actor['awards']): ?>
+
+			    	<p class="row well actor-awards">
+			    		<i class="fa fa-trophy"></i> 
+			       		<?php echo e($actor['awards']); ?>
+			       	</p>
+
+			    <?php endif; ?>
+			    	  
+			</section>
+		</div>
+
+		<div class="clearfix" id="known-for">
+
+		  <div class="heading"><i class="fa fa-star"></i> <?php echo trans('main.known for'); ?></div>
+
+			<?php foreach ($actor['title'] as $v): ?>
+
+				<?php if ($v['pivot']['known_for']): ?>
+
+					<figure class="col-xs-3">
+						<a href="<?php echo Helpers::url($v['title'], $v['id'], $v['type']); ?>">
+							<img src="<?php echo e(asset($v['poster'] ? $v['poster'] : 'assets/images/cinema.png')); ?>" alt="<?php echo 'Poster of ' . $v['title']; ?>" class="img-responsive thumb">
+						</a>
+					</figure>
+
+				<?php endif; ?>
+
+			<?php endforeach; ?>
+
+		</div>
+
+		<div class="clearfix">
+
+			<div class="heading"><i class="fa fa-star"></i> <?php echo trans('main.filmo'); ?></div>
+
+			<table class="table table-striped clearfix">
+				<tbody>		
+					<?php foreach ( Helpers::sortByYear($actor['title']) as $v): ?>
+			        	<tr>
+			        		<td class="col-sm-1">
+			        			<?php echo e($v['type'] == 'movie' ? trans('main.movie') : trans('main.series')); ?>
+			        		</td>
+			        		<td class="col-sm-5">
+			        			<a href="<?php echo Helpers::url($v['title'], $v['id'], $v['type']); ?>"><?php echo e($v['title']); ?></a>
+			        		</td>
+			        		<td class="col-sm-4"><?php echo $v['pivot']['char_name']; ?></td>
+			        		<td class="col-sm-2">
+			        			<?php echo e($v['release_date'] ? $v['release_date'] : $v['year']); ?>
+			        		</td>
+			        	</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+	<script>
+ko.bindingHandlers.moreLess.init('#bio', 1600);
+	</script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -1,0 +1,143 @@
+<section class="content" data-bind="playVideos">
+	
+	<?php if ( ! $slides->isEmpty()): ?>
+		<div class="jumbotron">
+			<div class="home-slider" data-bind="slider">
+			  	<?php foreach($slides as $slide): ?>
+			  		<div class="slide" style="background: url('<?php echo $slide->image; ?>')">
+			  			<div class="overlay">
+			  				<section class="pull-left details-column">
+		                        <h2><a href="<?php echo url($slide->link); ?>"><?php echo $slide->title; ?></a></h2>
+		                        <p><?php echo $slide->body; ?></p>
+		                        <ul class="slider-details list-unstyled">
+		                            <?php if ($slide->director): ?>
+		                                <li><strong><?php echo trans('main.directedBy'); ?></strong><?php echo $slide->director; ?></li>
+		                            <?php endif; ?>
+		                            <?php if ($slide->stars): ?>
+		                                <li><strong><?php echo trans('main.stars'); ?></strong><?php echo $slide->stars; ?></li>
+		                            <?php endif; ?>
+		                            <?php if ($slide->genre): ?>
+		                                <li><strong><?php echo trans('main.genre'); ?></strong><?php echo str_replace(' | ', ', ', $slide->genre); ?></li>
+		                            <?php endif; ?>
+		                            <?php if ($slide->release_date): ?>
+		                                <li><strong><?php echo trans('main.release date'); ?></strong><?php echo $slide->release_date; ?></li>
+		                            <?php endif; ?>
+		                        </ul>
+		                    </section>
+
+		                    <?php if ($slide->trailer): ?>
+	                            <div id="trailer-box" class="pull-right trailer-column play" data-source="<?php echo $slide->trailer; ?>" data-poster="<?php echo $slide->trailer_image; ?>">
+	                                <img src="<?php echo $slide->trailer_image; ?>" class="img-responsive">
+	                                <div class="overlay"></div>
+	                                <div class="center"><img src="<?php echo asset('assets/images/play.png'); ?>"> </div>
+	                            </div>
+	                        <?php endif; ?>
+			  			</div>
+			  		</div>
+			  	<?php endforeach; ?>
+			</div>
+		</div>
+	<?php endif; ?>
+
+    <div class="container <?php echo $slides->isEmpty() ? 'no-slider' : ''; ?>">
+
+		<?php if ($ad = $options->getHomeJumboAd()): ?>
+            <div id="ad"><?php echo $ad; ?></div>
+        <?php endif; ?>
+
+    	<?php echo $__env->make('Partials.Response', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+		<div class="<?php echo $options->enableNewsInHomepage() && ! $options->disableNews() ? 'col-sm-9' : 'col-sm-12 no-news'; ?>">
+			<?php if($categories->count()): ?>
+				<?php foreach($categories as $category): ?>
+					<?php if ($category->active): ?>
+						<section class="row <?php echo $category->show_rating ? 'with-rating' : ''; ?> title-sizes">
+							<h2 class="heading"><i class="<?php echo $category->icon; ?>"></i> <?php echo $category->name; ?></h2>
+
+							<?php if ($category->actor && ! $category->actor->isEmpty()): ?>
+								<?php foreach($category->actor->slice(0, $category->limit) as $actor): ?>
+									<figure class="<?php echo $options->enableNewsInHomepage() ? 'col-md-3 col-sm-6' : 'col-lg-2 col-md-3 col-sm-4'; ?>  pretty-figure">
+										<a href="<?php echo Helpers::url($actor->name, $actor->id, 'people'); ?>"><img src="<?php echo $actor->image; ?>" alt="<?php echo $actor->name; ?>" class="img-responsive"></a>
+										<figcaption><a href="<?php echo Helpers::url($actor->name, $actor->id, 'people'); ?>"><?php echo $actor->name; ?></a></figcaption>
+									</figure>
+								<?php endforeach; ?>
+							<?php endif; ?>
+
+							<?php if ($category->title && ! $category->title->isEmpty()): ?>
+								<?php foreach($category->title->slice(0, $category->limit) as $title): ?>
+									<figure class="<?php echo $options->enableNewsInHomepage() && ! $options->disableNews() ? 'col-md-3 col-sm-6' : 'col-lg-2 col-md-3 col-sm-4'; ?>  pretty-figure">
+										<div class="<?php echo $category->show_trailer ? 'play' : ''; ?>" data-source="<?php echo $title->trailer; ?>" data-poster="<?php echo $title->background; ?>">
+
+											<?php if ($category->show_trailer && $title->trailer): ?>
+												<img src="<?php echo $title->poster; ?>" alt="<?php echo $title->title; ?>" class="img-responsive">
+												<div class="center"><img src="<?php echo asset('assets/images/play.png'); ?>"> </div>
+											<?php else: ?>
+												<a href="<?php echo Helpers::url($title->title, $title->id, $title->type); ?>"><img src="<?php echo $title->poster; ?>" alt="<?php echo $title->title; ?>" class="img-responsive"></a>
+											<?php endif; ?>
+
+										</div>
+                                        <?php if(Hooks::hasReplace('Home.ForEachMovie')): ?>
+                                            <?php echo Hooks::renderReplace('Home.ForEachMovie', $title); ?>
+                                        <?php endif; ?>
+										<figcaption <?php echo ! $title->mc_user_score ? 'class="no-rating"' : ''; ?>>
+											<a href="<?php echo Helpers::url($title->title, $title->id, $title->type); ?>"><?php echo $title->title; ?></a>
+
+											<?php if ($category->show_rating && $title->mc_user_score): ?>
+												<div class="home-rating" data-bind="raty: <?php echo $title->mc_user_score; ?>, readOnly: true, stars: 10"></div>
+											<?php endif; ?>
+										</figcaption>
+									</figure>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</section>
+					<?php endif; ?>		
+				<?php endforeach; ?>
+			<?php else: ?>
+				<h4>Create categories you want to display from <strong>dashboard > categories</strong> page.</h4>
+			<?php endif; ?>
+		</div>
+		
+		<!-- latest news-->
+		<?php if ($options->enableNewsInHomepage() && ! $options->disableNews()): ?>
+			<div class="col-sm-3" id="news-container">
+				<h2 class="heading"><i class="fa fa-bullhorn"></i> <?php echo trans('main.latest news'); ?></h2>
+
+				<ul class="list-unstyled">
+					<?php foreach($news as $k => $item): ?>
+
+						<?php if ($k == 4): ?>
+							<?php if ($ad = $options->getHomeNewsAd()): ?>
+					            <div id="ad"><?php echo $ad; ?></div>
+					        <?php endif; ?>
+						<?php endif; ?>
+
+						<li>
+							<figure class="pretty-figure">
+								<a href="<?php echo Helpers::url($item->title, $item->id, 'news'); ?>"><img src="<?php echo $item->image; ?>" alt="<?php echo $item->title; ?>" class="img-responsive"></a>
+								<figcaption><a href="<?php echo Helpers::url($item->title, $item->id, 'news'); ?>"><?php echo $item->title; ?></a></figcaption>
+							</figure>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+		<?php endif; ?>
+		<!-- /latest news-->
+
+	</div>
+</section>
+
+<!-- video modal -->
+<div class="modal fade" id="vid-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<button type="button" class="modal-close" data-dismiss="modal" aria-hidden="true"> 
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                </span>
+            </button>
+            <div class="modal-body"> </div>
+        </div>
+     </div>
+</div>
+<!-- /video modal -->

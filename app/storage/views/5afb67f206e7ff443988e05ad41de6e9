@@ -1,0 +1,146 @@
+
+<?php $__env->startSection('bodytag'); ?>
+	<body id="search-page">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('nav'); ?>
+  <?php echo $__env->make('Partials.Navbar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+<div class="container">
+
+	<div class="row well">
+
+		<div class="pull-left">
+			<p><i class="fa fa-search"></i> <?php echo trans('main.top matches for'); ?> <strong><?php echo e($term); ?></strong></p>
+		</div>
+
+    	<div class="pull-right hidden-xs">
+			<ul class="btn-group list-unstyled list-inline">
+				<li class="active"><a href="#all" class="btn btn-primary" data-toggle="tab"><i class="fa fa-video-camera visible-xs"></i><span class="hidden-xs"><?php echo trans('main.all'); ?></span></a></li>
+			    <li><a href="#movies" class="btn btn-primary" data-toggle="tab"><i class="fa visible-xs fa-users"></i><span class="hidden-xs"><?php echo trans('main.movies'); ?></span></a></li>
+			    <li><a href="#series" class="btn btn-primary" data-toggle="tab"><i class="fa visible-xs fa-thumbs-up"></i><span class="hidden-xs"><?php echo trans('main.series'); ?></span></a></li>
+			    <?php if ( isset($actors) && ! $actors->isEmpty() ): ?>		
+			    	<li><a href="#people" class="btn btn-primary" data-toggle="tab"><i class="fa fa-video-camera visible-xs"></i><span class="hidden-xs"><?php echo trans('main.people'); ?></span></a></li>
+			    <?php endif; ?>    
+			</ul>
+		 </div>
+
+	</div>
+
+    <div class="row"> <?php echo $__env->make('Partials.Response', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> </div>
+
+	<div class="tab-content clearfix">
+		<div class="tab-pane fade in active" id="all">
+	       	<?php if ( isset($data) && ! $data->isEmpty() ): ?>
+				<div class="row">
+					<h2><?php echo trans('main.movies'); ?></h2>
+
+					<?php foreach($data->slice(0,50) as $k => $r): ?>
+						<?php if ($r->type == 'movie'): ?>
+							<figure class="col-lg-2 col-md-3 col-sm-6 pretty-figure">
+						    	<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"><img class ="img-responsive" src="<?php echo str_replace('w185', 'w342', $r->poster); ?>" alt="<?php echo e($r['title']); ?>"></a>
+
+							  	<figcaption title="<?php echo e($r->title); ?>" >
+							  		<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"><?php echo Helpers::shrtString($r['title']); ?></a>
+							  	</figcaption>
+						    </figure>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+	       	<?php if ( isset($data) && ! $data->isEmpty() ): ?>
+				<div class="row">
+					<h2><?php echo trans('main.series'); ?></h2>
+
+					<?php foreach($data->slice(0,20) as $k => $r): ?>
+						<?php if ($r->type == 'series'): ?>
+							<figure class="col-lg-2 col-md-3 col-sm-6 pretty-figure">
+						    	<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"><img class ="img-responsive" src="<?php echo str_replace('w185', 'w342', $r->poster); ?>" alt="<?php echo e($r['title']); ?>"></a>
+
+							  	<figcaption title="<?php echo e($r->title); ?>" >
+							  		<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"><?php echo Helpers::shrtString($r['title']); ?></a>
+							  	</figcaption>
+						    </figure>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( isset($actors) && ! $actors->isEmpty() ): ?>
+				<div class="row">
+					<h2><?php echo trans('main.people'); ?></h2>
+
+					<?php foreach(Helpers::withImages($actors, 20) as $k => $r): ?>
+						<figure class="col-lg-2 col-md-3 col-sm-6 pretty-figure">
+					    	<a href="<?php echo Helpers::url($r['name'], $r['id'], 'people'); ?>"><img class ="img-responsive" src="<?php echo str_replace('w185', 'w342', $r->image); ?>" alt="<?php echo e($r['name']); ?>"></a>
+
+						  	<figcaption title="<?php echo e($r->name); ?>" >
+						  		<a href="<?php echo Helpers::url($r['name'], $r['id'], 'people'); ?>"><?php echo $r['name']; ?> </a>
+						  	</figcaption>    
+					    </figure>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+      	</div>
+
+      	<div class="tab-pane fade in" id="movies">
+	       	<?php if ( isset($data) && ! $data->isEmpty() ): ?>
+				<?php foreach($data->slice(0,20) as $k => $r): ?>
+					<?php if ($r->type == 'movie'): ?>
+						<figure class="col-lg-2 col-md-3 col-sm-6 pretty-figure">
+					    	<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"><img class ="img-responsive" src="<?php echo str_replace('w185', 'w342', $r->poster); ?>" alt="<?php echo e($r['title']); ?>"></a>
+
+						  	<figcaption title="<?php echo e($r->title); ?>" >
+						  		<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"> <?php echo Helpers::shrtString($r['title']); ?> </a>
+						  	</figcaption>
+					    </figure>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			<?php else: ?>
+				<div><h3 class="nothing-found"><?php echo trans('main.no movies found'); ?></h3></div>
+			<?php endif; ?>
+      	</div>
+
+    	<div class="tab-pane fade" id="series">
+       		<?php if ( isset($data) && ! $data->isEmpty() ): ?>
+				<?php foreach($data as $k => $r): ?>
+					<?php if ($r->type == 'series'): ?>
+						<figure class="col-lg-2 col-md-3 col-sm-6 pretty-figure">
+					    	<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"><img class ="img-responsive" src="<?php echo str_replace('w185', 'w342', $r->poster); ?>" alt="<?php echo e($r['title']); ?>"></a>
+
+						  	<figcaption title="<?php echo e($r->title); ?>" >
+						  		<a href="<?php echo Helpers::url($r['title'], $r['id'], $r['type']); ?>"> <?php echo Helpers::shrtString($r['title']); ?> </a>
+						  	</figcaption> 
+					    </figure>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			<?php else: ?>
+				<div><h3 class="nothing-found"><?php echo trans('main.no series found'); ?></h3></div>
+			<?php endif; ?>
+      	</div>
+
+      	<div class="tab-pane fade" id="people">
+        	<?php if ( isset($actors) && ! $actors->isEmpty() ): ?>
+				<?php foreach($actors as $k => $r): ?>
+					<figure class="col-lg-2 col-md-3 col-sm-6 pretty-figure">
+				    	<a href="<?php echo Helpers::url($r['name'], $r['id'], 'people'); ?>"><img class ="img-responsive" src="<?php echo str_replace('w185', 'w342', $r->image); ?>" alt="<?php echo e($r['name']); ?>"></a>
+
+					  	<figcaption title="<?php echo e($r->name); ?>" >
+					  		<a href="<?php echo Helpers::url($r['name'], $r['id'], 'people'); ?>"><?php echo $r['name']; ?> </a>
+					  	</figcaption>    
+				    </figure>
+				<?php endforeach; ?>
+			<?php else: ?>
+				<div><h3 class="nothing-found"><?php echo trans('main.no actors found'); ?></h3></div>
+			<?php endif; ?>
+      	</div>
+    </div>
+</div>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

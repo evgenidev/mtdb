@@ -1,0 +1,24 @@
+9999999999s:409:"<li> <a  href="http://www.videocats.tv/mtdb/movies"
+	
+			>
+		Movies	
+</a> </li>
+        
+        
+                    <li> <a  href="http://www.videocats.tv/mtdb/series"
+	
+			>
+		Series	
+</a> </li>
+        
+        
+                    
+        
+        
+                    <li> <a data-bind="visible: app.perm()" href="http://www.videocats.tv/mtdb/dashboard"
+	
+			>
+		Dashboard	
+</a> </li>
+        
+        ";

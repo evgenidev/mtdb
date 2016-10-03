@@ -1,0 +1,229 @@
+
+<?php $__env->startSection('bodytag'); ?>
+	<body id="dashboard">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+	<section id="dash-container">
+
+	<?php echo $__env->make('Dashboard.Partials.Sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+	<section class="content" id="dashboard-menus"> 		
+		
+		<?php /* Create new menu */ ?>
+		<div id="create-new-cont" class="collapse">
+			<section class="panel panel-default">
+				<div class="panel-heading"><h3 class="panel-title"><?php echo trans('dash.newMenu'); ?></h3></div>
+				<div class="panel-body">
+					<label for="name"><?php echo trans('main.name'); ?></label>
+					<input data-bind="value: app.models.menu.name, valueUpdate: 'keyup'" class="form-control" name="name" type="text">
+					
+					<div class="form-group">
+					  		<label for="position1"><?php echo trans('dash.position'); ?></label>
+					    	<select class="form-control" data-bind="value: app.models.menu.position" id="position1">
+					    		<option value="header"><?php echo trans('dash.header'); ?></option>
+					    		<option value="footer"><?php echo trans('dash.footer'); ?></option>
+					    	</select>
+					  	</div>
+
+					<button data-bind="click: createNew, enable: app.models.menu.name" type="button" class="btn btn-primary"><?php echo trans('dash.create'); ?></button>
+				</div>
+			</section>		
+		</div>
+		<?php /* /Create new menu */ ?>
+
+		<div class="row">
+
+			<?php /* Attach link */ ?>
+			<section class="col-sm-4 panel-group" id="accordion">
+
+				<!-- ko if: activeMenu -->
+				<section class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><?php echo trans('dash.parentItem'); ?></h3>
+					</div>
+					<div id="attachTo">
+						<div class="panel-body">
+							<select class="form-control" data-bind="options: activeMenu().items(),
+									optionsText: function(item) { return item.label },
+									value: attachingTo,
+									optionsCaption: '<?php echo trans('dash.none'); ?>...'"></select>
+						</div>
+					</div>
+				</section>
+				<!-- /ko -->
+
+				<section class="panel panel-default">
+					<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#links">
+						<h3 class="panel-title"><?php echo trans('dash.menuAddLink'); ?></h3>
+
+						<div class="panel-btns">
+		                    <button class="panel-btn">
+		                        <i class="fa fa-caret-down"></i>
+		                    </button>
+		                </div>
+					</div>
+					<div id="links" class="panel-collapse collapse in">
+						<div class="panel-body">
+							<input class="form-control" placeholder="<?php echo trans('dash.url'); ?>..." name="action" type="text">
+							<input class="form-control" placeholder="<?php echo trans('dash.label'); ?>..." name="label" type="text">
+							<input class="form-control" placeholder="<?php echo trans('dash.order'); ?>..." name="weight" type="text">
+							<div class="form-group">
+								<select class="form-control" name="visibility" id="visibility">
+									<option value="" selected><?php echo trans('dash.visibility'); ?>...</option>
+									<option value="everyone"><?php echo trans('dash.everyone'); ?></option>
+									<option value="admin"><?php echo trans('dash.admin'); ?></option>
+								</select>
+							</div>
+
+							<button data-bind="click: attachLink" type="button" class="btn btn-primary"><?php echo trans('dash.attach'); ?></button>
+						</div>
+					</div>
+				</section>
+				<?php /* /Attach link */ ?>
+
+				<?php /* Attach page */ ?>
+				<section class="panel panel-default">
+					<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#pages">
+						<h3 class="panel-title"><?php echo trans('dash.menuAddPage'); ?></h3>
+
+						<div class="panel-btns">
+		                    <button class="panel-btn">
+		                        <i class="fa fa-caret-down"></i>
+		                    </button>
+		                </div>
+					</div>
+					<div id="pages" class="panel-collapse collapse">
+						<div class="panel-body">
+							<div data-bind="foreach: vars.pages, iCheck">
+								<div class="radio">
+									<label>
+										<input type="radio" class="pages" name="page" data-bind="value: $data, checked: $root.selectedPage">
+										<span data-bind="text: $data"></span>
+									</label>
+								</div>
+							</div>
+							
+							<button data-bind="click: attachPage" type="button" class="btn btn-primary"><?php echo trans('dash.attach'); ?></button>					
+						</div>
+					</div>
+				</section>
+				<?php /* /Attach page */ ?>
+
+				<?php /* Attach route */ ?>
+				<section class="panel panel-default">
+					<div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#routes">
+						<h3 class="panel-title"><?php echo trans('dash.menuAddRoute'); ?></h3>
+						
+						<div class="panel-btns">
+		                    <button class="panel-btn">
+		                        <i class="fa fa-caret-down"></i>
+		                    </button>
+		                </div>
+					</div>
+					<div id="routes" class="panel-collapse collapse">
+						<div class="panel-body">
+							<div data-bind="foreach: vars.routes" class="row">					
+								<div class="checkbox col-sm-6">
+								  <label>
+								    <input type="checkbox" data-bind="checkboxArray: { checked: $parent.selectedRoutes, label: $data }">
+								    <span data-bind="text: $data"></span>
+								  </label>
+								</div>
+							</div>	
+							
+							<button class="btn btn-primary" data-bind="click: attachRoutes"><?php echo trans('dash.attach'); ?></button>
+						</div>
+					</div>
+				</section>
+				<?php /* /Attach route */ ?>
+
+			</section>
+
+			<section class="col-sm-8">
+				<div class="panel panel-default" id="menu-edit-cont">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<span data-bind="if: allMenus().length && activeMenu"><?php echo trans('dash.editing'); ?>: <i data-bind="text: activeMenu().name"></i></span>
+							<span data-bind="if: !allMenus().length"><?php echo trans('dash.noMenus'); ?></span>
+						</h3></div>
+					<div class="panel-body">
+									
+					  	<div class="form-group" data-bind="if: allMenus().length">
+					    	<label for="active-name"><?php echo trans('dash.selectMenu'); ?></label>
+					    	<select id="active-name" class="form-control" data-bind="options: allMenus, optionsText: function(item) { return item.name }, value: activeMenu"></select>
+					  	</div>
+					  	
+						<!-- ko if: activeMenu -->
+						<div class="form-group">
+					  		<label for="active"><?php echo trans('dash.active'); ?></label>
+					    	<select class="form-control" data-bind="value: activeMenu().active" id="active">
+					    		<option value="0"><?php echo trans('dash.no'); ?></option>
+					    		<option value="1"><?php echo trans('dash.yes'); ?></option>
+					    	</select>
+					  	</div>
+
+					  	<div class="form-group">
+					  		<label for="position2"><?php echo trans('dash.position'); ?></label>
+					    	<select class="form-control" data-bind="value: activeMenu().active" id="position2">
+					    		<option value="header"><?php echo trans('dash.header'); ?></option>
+					    		<option value="footer"><?php echo trans('dash.footer'); ?></option>
+					    	</select>
+					  	</div>
+						<!-- /ko -->
+					  
+					  <!-- ko if: allMenus().length -->
+					  <button data-bind="click: save" type="button" class="btn btn-success"><?php echo trans('dash.save'); ?></button>
+					  <button data-bind="click: deleteMenu" type="button" class="btn btn-danger"><?php echo trans('main.delete'); ?></button>
+					  <!-- /ko -->
+
+					  <button class="btn btn-primary" data-toggle="collapse" data-target="#create-new-cont"><?php echo trans('dash.createNew'); ?></button>
+						  
+					<!-- ko if: allMenus().length -->
+						<hr>
+
+						<h3><?php echo trans('dash.modMenuItems'); ?></h3>
+	
+						<p><?php echo trans('dash.menuItemExpl', array('caret' => '<i class="caret"></i>', 'times' => '<i class="fa fa-times"></i>')); ?></p>
+
+						<!-- ko if: activeMenu -->
+						<ul class="list-unstyled menu-items-list" data-bind="foreach: activeMenu().items()">
+
+							<?php echo $__env->make('Dashboard.Menus.MenuItemTemplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+							<!-- ko if: children().length > 0-->
+								<!-- ko foreach: children() -->
+									<?php echo $__env->make('Dashboard.Menus.MenuItemTemplate', array('child' => true), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+								<!-- /ko -->
+							<!-- /ko -->
+						</ul>
+						<!-- /ko -->
+					<!-- /ko -->
+
+					</div>
+				</div>
+
+				<?php echo $__env->make('Dashboard.Menus.Templates.DemoMenu', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			</section>
+		</div>
+
+	</section>
+	</section>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+	<script>
+	vars.routes = <?php echo json_encode($routes); ?>;
+	vars.partials = <?php echo json_encode($partials); ?>;
+	vars.pages = <?php echo json_encode($pages); ?>;
+	        
+	vars.menus = app.viewModels.menus.map(<?php echo $options->getMenus(); ?>);
+	app.viewModels.menus.allMenus(vars.menus);
+	ko.applyBindings(app.viewModels.menus, $('#dash-container')[0]);
+	</script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('footer'); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

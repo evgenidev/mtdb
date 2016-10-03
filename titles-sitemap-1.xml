@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url>
+    <loc>//www.videocats.tv/mtdb/movies/14-spiderman</loc>
+		<priority>1</priority>
+		<lastmod>2016-09-02T02:36:59+03:00</lastmod>
+		<changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>//www.videocats.tv/mtdb/movies/32-the-extraordinary-spiderman</loc>
+		<priority>1</priority>
+		<lastmod>2016-09-02T02:38:25+03:00</lastmod>
+		<changefreq>weekly</changefreq>
+  </url>
+</urlset>

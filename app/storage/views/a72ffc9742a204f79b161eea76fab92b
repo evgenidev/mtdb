@@ -1,0 +1,63 @@
+
+<?php $__env->startSection('bodytag'); ?>
+	<body id="dashboard">
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+	<section id="dash-container">
+
+		<?php echo $__env->make('Dashboard.Partials.Sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+		<div class="content col-sm-11 ads">
+
+			<section class="row">
+         		<?php echo $__env->make('Partials.Response', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        	</section>
+
+        	<?php echo Form::model($options->getAll(), array('url' => 'dashboard/options', 'class' => 'form-horizontal')); ?>
+
+	            <div class="form-group">
+					<label for="analytics">Google Analytics</label>
+					<?php echo Form::textarea('analytics', null, array('class' => 'form-control', 'rows' => 6)); ?>
+					<i class="help-block"><?php echo trans('dash.gooAnalytics'); ?></i>
+				</div>
+
+
+				<div class="form-group">
+					<label for="ad_footer_all">Ad slot #1</label>
+					<?php echo Form::textarea('ad_footer_all', null, array('class' => 'form-control', 'rows' => 6)); ?>
+					<i class="help-block"><?php echo trans('dash.adFooterAll'); ?></i>
+				</div>
+
+				<div class="form-group">
+					<label for="ad_title_jumbo">Ad slot #2</label>
+					<?php echo Form::textarea('ad_title_jumbo', null, array('class' => 'form-control', 'rows' => 6)); ?>
+					<i class="help-block"><?php echo trans('dash.adTitleJumbo'); ?></i>
+				</div>
+
+				<div class="form-group">
+					<label for="ad_home_jumbo">Ad slot #3</label>
+					<?php echo Form::textarea('ad_home_jumbo', null, array('class' => 'form-control', 'rows' => 6)); ?>
+					<i class="help-block"><?php echo trans('dash.adHomeJumbo'); ?></i>
+				</div>
+
+				<div class="form-group">
+					<label for="ad_home_news">Ad slot #4</label>
+					<?php echo Form::textarea('ad_home_news', null, array('class' => 'form-control', 'rows' => 6)); ?>
+					<i class="help-block"><?php echo trans('dash.adHomeNews'); ?></i>
+				</div>
+
+				<button class="btn btn-success"><?php echo trans('main.submit'); ?></button>
+
+	            
+         	<?php echo Form::close(); ?>
+        </div>
+
+	</section>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('ads'); ?>	
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('Main.Boilerplate', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

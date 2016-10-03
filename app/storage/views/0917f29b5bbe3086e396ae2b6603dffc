@@ -1,0 +1,25 @@
+<?php $href = ''; ?>
+
+<?php if (isset($item['action'])): ?>
+	<?php if ($item['type'] == 'link'): ?>
+		<?php $href = $item['action'] ?>
+	<?php elseif ($item['type'] == 'page'): ?>
+		<?php $href = url($item['action']) ?>
+	<?php elseif ($item['type'] == 'route'): ?>
+		<?php $href = route($item['action']) ?>
+	<?php endif; ?>
+<?php endif; ?>
+
+
+<a <?php echo $item['visibility'] == 'admin' ? 'data-bind="visible: app.perm()"' : ''; ?> href="<?php echo $href; ?>"
+	
+	<?php if (isset($item['partial']) || (isset($item['children']) && $item['children'])): ?>
+		class="dropdown-toggle" data-toggle="dropdown">
+		<?php echo $item['label']; ?>
+		<b class="caret"></b>
+	<?php else: ?>
+		>
+		<?php echo $item['label']; ?>
+	<?php endif; ?>
+
+</a>

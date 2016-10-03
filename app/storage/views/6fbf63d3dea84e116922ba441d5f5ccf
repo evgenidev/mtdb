@@ -1,0 +1,67 @@
+<?php foreach (isset($items) ? $items : $headerMenu['items'] as $item): ?>
+    <?php if ($item['type'] === 'link'): ?>
+
+        <?php if (isset($item['partial'])): ?>
+            <li class="dropdown yamm-fw">
+                <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <?php echo $__env->make('Partials.Menus.Dropdowns.'.$item['partial'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            </li>
+         <?php elseif (isset($item['children']) && $item['children']): ?>                  
+            <li class="dropdown simple-dropdown">
+                <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <ul class="dropdown-menu">
+                    <?php foreach ($item['children'] as $child): ?>
+                        <li> <?php echo $__env->make('Partials.Menus.Link', array('item' => $child), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?></li>
+                    <?php endforeach; ?>
+                </ul>           
+            </li>
+        <?php else: ?>
+            <li><a <?php echo $item['visibility'] == 'admin' ? 'data-bind="visible: app.perm()"' : ''; ?> href="<?php echo $item['action']; ?>"><?php echo $item['label']; ?></a></li>
+        <?php endif; ?>  
+    
+    <?php elseif ($item['type'] === 'route'): ?>
+
+        <?php if($options->disableNews() && $item['action'] === 'news.index'): ?>
+            
+        <?php elseif (isset($item['partial'])): ?>
+            <li class="dropdown yamm-fw">
+                <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <?php echo $__env->make('Partials.Menus.Dropdowns.'.$item['partial'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            </li>
+        <?php elseif (isset($item['children']) && $item['children']): ?>                  
+            <li class="dropdown simple-dropdown">
+               <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <ul class="dropdown-menu">
+                   <?php foreach ($item['children'] as $child): ?>
+                        <li> <?php echo $__env->make('Partials.Menus.Link', array('item' => $child), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                
+            </li>
+        <?php else: ?>
+            <li> <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> </li>
+        <?php endif; ?>
+
+    <?php elseif ($item['type'] === 'page'): ?>
+
+        <?php if (isset($item['partial'])): ?>
+            <li class="dropdown yamm-fw">
+               <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <?php echo $__env->make('Partials.Menus.Dropdowns.'.$item['partial'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            </li>
+        <?php elseif (isset($item['children']) && $item['children']): ?>                  
+            <li class="dropdown simple-dropdown">
+                <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                <ul class="dropdown-menu">
+                    <?php foreach ($item['children'] as $child): ?>
+                        <li> <?php echo $__env->make('Partials.Menus.Link', array('item' => $child), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                
+            </li>
+        <?php else: ?>
+            <li> <?php echo $__env->make('Partials.Menus.Link', array('item' => $item), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> </li>
+        <?php endif; ?>
+
+    <?php endif; ?>
+<?php endforeach; ?>    

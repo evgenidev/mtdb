@@ -1,0 +1,59 @@
+1472951820s:2487:"<section class="content" data-bind="playVideos">
+	
+	
+    <div class="container no-slider">
+
+		
+    	
+		<div class="col-sm-12 no-news">
+																		<section class="row  title-sizes">
+							<h2 class="heading"><i class=""></i> New Movies</h2>
+
+							
+																								<figure class="col-lg-2 col-md-3 col-sm-4  pretty-figure">
+										<div class="" data-source="" data-poster="https://image.tmdb.org/t/p/w780/6MWplVo3Jz3pNuwugkKYQ3VCzeO.jpg">
+
+																							<a href="//www.videocats.tv/mtdb/movies/22-spiderman-homecoming"><img src="https://image.tmdb.org/t/p/w342/Afiq9KUWbsTum8rybMQa5xJ9cjG.jpg" alt="Spider-Man: Homecoming" class="img-responsive"></a>
+											
+										</div>
+                                                                                                                            										<figcaption class="no-rating">
+											<a href="//www.videocats.tv/mtdb/movies/22-spiderman-homecoming">Spider-Man: Homecoming</a>
+
+																					</figcaption>
+									</figure>
+																	<figure class="col-lg-2 col-md-3 col-sm-4  pretty-figure">
+										<div class="" data-source="https://www.youtube.com/embed/mgX4FDb_syY" data-poster="https://image.tmdb.org/t/p/w780/zKM3YlEr3KqQosA6mgI9EVz3U5G.jpg">
+
+																							<a href="//www.videocats.tv/mtdb/movies/14-spiderman"><img src="https://image.tmdb.org/t/p/w342/3tx39zclUWEiJUBk7BPoD8hwiXZ.jpg" alt="Spider-Man" class="img-responsive"></a>
+											
+										</div>
+                                                                                                                            										<figcaption class="no-rating">
+											<a href="//www.videocats.tv/mtdb/movies/14-spiderman">Spider-Man</a>
+
+																					</figcaption>
+									</figure>
+																					</section>
+							
+									</div>
+		
+		<!-- latest news-->
+				<!-- /latest news-->
+
+	</div>
+</section>
+
+<!-- video modal -->
+<div class="modal fade" id="vid-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<button type="button" class="modal-close" data-dismiss="modal" aria-hidden="true"> 
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                </span>
+            </button>
+            <div class="modal-body"> </div>
+        </div>
+     </div>
+</div>
+<!-- /video modal -->";

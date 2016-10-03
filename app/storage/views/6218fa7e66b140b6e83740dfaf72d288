@@ -1,0 +1,3 @@
+<?php if (isset($episode) && Helpers::hasLinks($episode)): ?>
+    <div class="status"><?php echo trans('stream::main.availToStream'); ?></div>
+<?php endif; ?>
